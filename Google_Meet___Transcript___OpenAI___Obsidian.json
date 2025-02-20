@@ -1,0 +1,284 @@
+{
+  "name": "Google Meet > Transcript > OpenAI > Obsidian",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "16idGwUIKyWyz_nv-0wLn3IIGNQfh38x8",
+          "mode": "list",
+          "cachedResultName": "Testing",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/16idGwUIKyWyz_nv-0wLn3IIGNQfh38x8"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1640,
+        -80
+      ],
+      "id": "4c39efd0-69d3-4569-92fa-5f658a0d4399",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YeoYgQSKbB0tg7js",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=# MISSION  \nAct as an expert in analyzing and summarizing meeting transcripts. You know how to identify key points and action items from text. Your job is to provide concise summaries with bullet points and tag names with hashtags. Your job is done when you've efficiently extracted and formatted the crucial elements from meeting notes.  \n  \n# INSTRUCTIONS  \n1. Analyze Transcript: Process the text of meeting notes, focusing on the content's essence.\n2. Meeting Summary: Summarize the meeting in bullet points. \n3. Extract Key Points: Identify and list the main topics or key points as bullet points and things most relevant to Uros Pesic.\n4. Identify Action Items: Detect to-do items or action points ONLY for #UrosPesic, format them as '- [ ] {action item} #todo'.  \n5. Tag Names: Whenever a name is mentioned, tag it in the format '#Name'. \n\nExample Meeting Summary: \n## Meeting Summary:\n\n- **Date & Time**: 2023-10-15 19:56 GMT+2\n- **Attendees**: #UrosPesic, #WilliamShields, #Fireflies_ai_Notetaker\n- **Main Discussion**: Trello board usage, project management, and potential business opportunities.\n## Detailed Breakdown:\n- - **Axon deals progress**: Two Axon deals are shaping up, one with a company referred by #Dan from Prompt Hub, and another with #WilliamShields's billionaire coaching client for an automated lead outreach tool.\n- **APIs for projects**: Discussion about using APIs from the lead outreach project for other purposes.\n- **Salesforce and Wealth X API**: Plans to integrate Salesforce and Wealth X API for upselling opportunities.\n- **Uplimit courses**: Development of new entry-level content for Uplimit, including a 101 and 102 course for AI and Chat GPT.\n- **Nvidia partnership**: #WilliamShields discussed a potential partnership with Nvidia and a startup called Morpheme for generative voice AI.\n- **Digital fingerprint for voice actors**: Aiming to create a digital fingerprint for voice actors to protect their work and potentially detect authentic use of their voice.\n- **Greg Schwartz's project**: #GregSchwartz shared his idea for simplifying AI papers using different levels of abstraction, potentially as a product.\n- **Trello and Miss Nora**: Discussion on organizing Trello and using Miss Nora to upload research papers for easy access and summarization.\n- **Goda Go's Nvidia opportunity**: #GodaGo received an email from Nvidia wanting to sponsor a video.\n \n  \n# RULES \n- User Markdown formatting - use boldings and all good documenting practices as this goes to Obsidian Note.\n- Prioritize clarity and succinctness in summaries\n\nACTUAL TRANSCRIPT CONTENT:\n\n {{ $json.content }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 2500,
+          "n": 1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -1080,
+        -80
+      ],
+      "id": "6a5068b9-cf18-4d68-9112-518e18fc552f",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "zrtrFWTGZBvBLjPF",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -1340,
+        -80
+      ],
+      "id": "8a1260cf-0433-4da0-8d15-79c8fdbb1da5",
+      "name": "Google Docs",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "Fnnf34RNa48n2QsN",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a naming convention specialist, your job is to create a perfect name for my Meeting Transcript note.\nDont use any of the symbols listed\nLIST: / \\ ? ! \" : < > \nIt should ALWAYS follow the format: \n\nFormat: Current Date (don't forget its 2024 now) - Meeting Title (create a meeting title based on the topic of conversation) - First names of participants (Example: Uros,Amy,Wes)\n\nImperative: You should output only the Name, nothing else!!!\n\nTranscript content parsed through AI:  {{ $json.message.content }}",
+              "role": "=user"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -700,
+        -80
+      ],
+      "id": "97f6d54e-fdf2-4874-9c77-381b732c1451",
+      "name": "OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "zrtrFWTGZBvBLjPF",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "This one is the Transcipt Prompt"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1080,
+        -140
+      ],
+      "id": "99ba2adb-6346-4fcc-af6f-5292ac544877",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "This is the naming for the file prompt\n",
+        "height": 80
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -700,
+        -140
+      ],
+      "id": "552fd038-cbb6-461a-bef9-90c39d23638f",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "=data",
+        "binaryPropertyName": "=",
+        "options": {
+          "fileName": "={{ $json.fileName }}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -80,
+        -80
+      ],
+      "id": "4b0cd10e-c17a-48ee-8023-be0929864fb0",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $('Code').item.json.fileName }}",
+        "dataPropertyName": "=",
+        "options": {
+          "append": true
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        140,
+        -80
+      ],
+      "id": "cc166fda-af91-4441-aa1e-ef5c4238fb77",
+      "name": "Read/Write Files from Disk1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the title from OpenAI1 and clean it for filename use\nconst title = $input.first().json.message.content;\nconst cleanTitle = title.replace(/[/\\\\?%*:|\"<>]/g, '-'); // Replace invalid filename chars\n\n// Get the content from OpenAI\nconst content = $('OpenAI').first().json.message.content;\n\n// Create current timestamp in YYYY-MM-DD format\nconst now = new Date();\nconst date = now.toISOString().split('T')[0];\n\n// Create the initial file with YAML frontmatter\nconst fileContent = `---\ntitle: ${title}\ndate: ${date}\ncreated: ${now.toISOString()}\n---\n\n${content}`;\n\n// For filename, use the title directly since it already contains the date\nreturn {\n    json: {\n        data: Buffer.from(fileContent).toString('base64'),\n        fileName: `F:/Obsidian Vault - New/Meetings/${cleanTitle}.md`\n    }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -320,
+        -80
+      ],
+      "id": "5dc33e13-7bec-410d-ac10-164e1ac25ded",
+      "name": "Code"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Docs": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2279df9e-c662-432d-9591-0bfce3e2eabc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "280f3718c0e6d4cc137760d46769d370f649981db6ce29214a7a56eb4c003faa"
+  },
+  "id": "km55loinUmAOb3fK",
+  "tags": []
+}
